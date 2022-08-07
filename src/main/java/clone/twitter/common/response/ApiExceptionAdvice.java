@@ -1,6 +1,7 @@
 package clone.twitter.common.response;
 
 import clone.twitter.common.enums.ExceptionEnum;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,23 +42,12 @@ public class ApiExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<ApiExceptionEntity> exceptionHandler(HttpServletRequest request, final AccessDeniedException e) {
+    public ResponseEntity<ApiExceptionEntity> exceptionHandler(HttpServletRequest request, final @NotNull AccessDeniedException e) {
         e.printStackTrace();
         return ResponseEntity
                 .status(ExceptionEnum.ACCESS_DENIED_EXCEPTION.getHttpStatus())
                 .body(ApiExceptionEntity.builder()
                         .errorCode(ExceptionEnum.ACCESS_DENIED_EXCEPTION.getCode())
-                        .errorMessage(e.getMessage())
-                        .build());
-    }
-
-    @ExceptionHandler({NoHandlerFoundException.class})
-    public ResponseEntity<ApiExceptionEntity> exceptionHandler(HttpServletRequest request, final NoHandlerFoundException e) {
-        e.printStackTrace();
-        return ResponseEntity
-                .status(ExceptionEnum.PAGE_NOT_FOUND_EXCEPTION.getHttpStatus())
-                .body(ApiExceptionEntity.builder()
-                        .errorCode(ExceptionEnum.PAGE_NOT_FOUND_EXCEPTION.getCode())
                         .errorMessage(e.getMessage())
                         .build());
     }

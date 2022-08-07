@@ -41,7 +41,6 @@ public class UserService {
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
-        log.debug("working1");
         return UserDto.from(userRepository.save(user));
     }
 
