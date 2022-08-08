@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,14 +30,20 @@ public class User extends BaseTime {
     @Type(type = "uuid-char")
     private UUID userUuid;
 
-    @Column(name = "username", length = 50, unique = true)
-    private String username;
+    @Column(name = "email", length = 50, unique = true)
+    private String email;
 
     @Column(name = "password", length = 100)
     private String password;
 
     @Column(name = "nickname", length = 50)
-    private String nickname;
+    private String username;
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(name = "background_image_url")
+    private String backgroundImageUrl;
 
     @Column(name = "activated")
     private boolean activated;
@@ -54,6 +61,10 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<FeedLike> feedLikes = new ArrayList<>();
 
+    /*
+    * 22.08.08
+    * Followers & Followee Needed !
+    * */
     @PrePersist
     private void makeUUID() {
         this.userUuid = UUID.randomUUID();

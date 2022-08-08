@@ -2,9 +2,15 @@
   <div class="flex flex-col items-center space-y-4 mt-10">
     <i :class="`fab fa-twitter text-4xl text-primary ${loading ? 'animate-bounce' : ''}`"></i>
     <span class="text-2xl font-bold">뜨위떠 회원가입</span>
-    <input v-model="username" type="text" class="rounded w-96 px-4 py-3 border border-gray-300 focus:ring-2 focus:border-primary focus:outline-none" placeholder="아이디" />
-    <input v-model="email" type="text" class="rounded w-96 px-4 py-3 border border-gray-300 focus:ring-2 focus:border-primary focus:outline-none" placeholder="이메일" />
-    <input @keyup.enter="onRegister" v-model="password" type="password" class="rounded w-96 px-4 py-3 border border-gray-300 focus:ring-2 focus:border-primary focus:outline-none" placeholder="비밀번호" />
+    <input v-model="username" type="text"
+           class="rounded w-96 px-4 py-3 border border-gray-300 focus:ring-2 focus:border-primary focus:outline-none"
+           placeholder="아이디"/>
+    <input v-model="email" type="text"
+           class="rounded w-96 px-4 py-3 border border-gray-300 focus:ring-2 focus:border-primary focus:outline-none"
+           placeholder="이메일"/>
+    <input @keyup.enter="onRegister" v-model="password" type="password"
+           class="rounded w-96 px-4 py-3 border border-gray-300 focus:ring-2 focus:border-primary focus:outline-none"
+           placeholder="비밀번호"/>
     <button v-if="loading" class="w-96 rounded bg-light text-white py-3">회원가입 중입니다.</button>
     <button v-else class="w-96 rounded bg-primary text-white py-3 hover:bg-dark" @click="onRegister">회원가입</button>
     <router-link to="/login">
@@ -14,9 +20,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { auth, USER_COLEECTION } from '../firebase'
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import axios from 'axios'
+
 export default {
   setup() {
     const username = ref('')
@@ -33,19 +40,18 @@ export default {
 
       try {
         loading.value = true
-        const { user } = await auth.createUserWithEmailAndPassword(email.value, password.value)
-        const doc = USER_COLEECTION.doc(user.uid)
-        await doc.set({
-          uid: user.uid,
-          username: username.value,
+
+        let myFrom = new FormData();
+        myFrom.append("email", email.value);
+        myFrom.append("password", password.value);
+        myFrom.append("username", username.value);
+        let data = {
           email: email.value,
-          profile_image_url: '/profile.jpeg',
-          background_image_url: '/background.png',
-          num_tweets: 0,
-          followers: [],
-          followings: [],
-          created_at: Date.now(),
-        })
+          password: password.value,
+          username: username.value
+        };
+        const {user} = await axios.post('http://localhost:8080/api/signup', JSON.stringify(data), {headers: {"Content-Type": "application/json"}});
+
         alert('회원 가입에 성공하셨습니다. 로그인 해주세요.')
         router.push('/login')
       } catch (e) {
@@ -60,6 +66,7 @@ export default {
             alert('이미 가입되어 있는 이메일 입니다.')
             break
           default:
+            console.log(e.code);
             alert('회원가입 실패')
             break
         }
@@ -68,13 +75,7 @@ export default {
       }
     }
 
-    return {
-      username,
-      email,
-      password,
-      loading,
-      onRegister,
-    }
+    return {username, email, password, loading, onRegister}
   },
 }
 </script>
