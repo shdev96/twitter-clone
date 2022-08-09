@@ -4,5 +4,5 @@ Content-Type: application/json
 {
   "username": "username1",
   "password": "userpass1",
-  "email": "usernick1@naver.com"
+  "email": "usernick1"
 }

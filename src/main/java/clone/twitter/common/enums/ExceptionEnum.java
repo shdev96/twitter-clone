@@ -11,8 +11,7 @@ public enum ExceptionEnum {
     ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, "E002"),
     INTERNAL_SERVER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "E003"),
     PAGE_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "EOO4"),
-    UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "E005"),
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "E006");
+    UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "E005");
 
     private final HttpStatus httpStatus;
     private final String code;
